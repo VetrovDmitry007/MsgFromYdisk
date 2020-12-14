@@ -3,19 +3,20 @@ import pickle
 
 class ApiMsg:
 
-    def __init__(self, token, user_name):
+    def __init__(self, token, user_name, remote_dir):
         self.y = yadisk.YaDisk(token=token)
         self.loc_user = user_name
+        self.remote_dir = remote_dir
         self._init()
 
     def _init(self):
         ls = ['init']
-        if not self.y.is_file(f"/olimp/{self.loc_user}.msg"):
+        if not self.y.is_file(f"{self.remote_dir}/{self.loc_user}.msg"):
             print('Иницилизация.')
             with open('temp.msg', 'wb') as f:
                 pickle.dump(ls, f)
                 # Загружает "temp.msg" в "/destination.txt"
-            self.y.upload("temp.msg", f"/olimp/{self.loc_user}.msg")
+            self.y.upload("temp.msg", f"{self.remote_dir}/{self.loc_user}.msg")
 
     def _send_msg(self, ms):
         """
@@ -23,16 +24,16 @@ class ApiMsg:
         :param ms: message
         :return:
         """
-        self.y.download(f"/olimp/{self.loc_user}.msg", "temp.msg")
+        self.y.download(f"{self.remote_dir}/{self.loc_user}.msg", "temp.msg")
         with open('temp.msg', 'rb') as f:
             data = pickle.load(f)
         data.append(ms)
         # Безвозвратно удаляет файл
-        self.y.remove(f"/olimp/{self.loc_user}.msg", permanently=True)
+        self.y.remove(f"{self.remote_dir}/{self.loc_user}.msg", permanently=True)
         with open('temp.msg', 'wb') as f:
             pickle.dump(data, f)
         # Загружает "output.txt" в "/destination.txt"
-        self.y.upload("temp.msg", f"/olimp/{self.loc_user}.msg")
+        self.y.upload("temp.msg", f"{self.remote_dir}/{self.loc_user}.msg")
         print(f'Сообщние отправлено пользоватедем {self.loc_user}.')
 
     def _get_msg(self, rem_user):
@@ -41,8 +42,8 @@ class ApiMsg:
         :param rem_user: Name remote user
         :return:
         """
-        if self.y.is_file(f"/olimp/{rem_user}.msg"):
-            self.y.download(f"/olimp/{rem_user}.msg", "temp.msg")
+        if self.y.is_file(f"{self.remote_dir}/{rem_user}.msg"):
+            self.y.download(f"{self.remote_dir}/{rem_user}.msg", "temp.msg")
             with open('temp.msg', 'rb') as f:
                 data = pickle.load(f)[-1]
             print(data)
@@ -55,8 +56,8 @@ class ApiMsg:
         :param rem_user:
         :return:
         """
-        if self.y.is_file(f"/olimp/{rem_user}.msg"):
-            self.y.download(f"/olimp/{rem_user}.msg", "temp.msg")
+        if self.y.is_file(f"{self.remote_dir}/{rem_user}.msg"):
+            self.y.download(f"{self.remote_dir}/{rem_user}.msg", "temp.msg")
             with open('temp.msg', 'rb') as f:
                 data = pickle.load(f)
             print(f'Список сообщений пользователя {rem_user}:')
@@ -68,22 +69,22 @@ class ApiMsg:
 
     def _admin(self, command):
         if command == 'lm':
-            ret = self.y.listdir('/olimp')
+            ret = self.y.listdir(self.remote_dir)
             print('Список диалогов пользователей:')
             [print(obj['name']) for obj in list(ret) if obj['name'].endswith('msg')]
         elif command == 'ls':
-            ret = self.y.listdir('/olimp')
+            ret = self.y.listdir(self.remote_dir)
             print('Список файлов на сервере:')
             [print(obj['name']) for obj in list(ret)]
         elif command == 'rm':
-            ret = self.y.listdir('/olimp')
-            [self.y.remove(f"/olimp/{obj['name']}") for obj in list(ret)]
+            ret = self.y.listdir(self.remote_dir)
+            [self.y.remove(f"{self.remote_dir}/{obj['name']}") for obj in list(ret)]
             print('На сервере все файлы удалены !')
 
     def __call__(self, **kwargs):
-        self._cmd(**kwargs)
+        self._main(**kwargs)
 
-    def _cmd(self, cm='-h', prm=None):
+    def _main(self, cm='-h', prm=None):
         if cm == '-h':
             print('Справка')
             print('-----------------------')
@@ -111,15 +112,14 @@ class ApiMsg:
             self._set_file(prm)
 
     def _get_file(self, file_name):
-        self.y.download(f"/olimp/{file_name}", file_name)
+        self.y.download(f"{self.remote_dir}/{file_name}", file_name)
         print(f'Файл {file_name} скачан.')
 
     def _set_file(self, file_name):
-        if self.y.is_file(f"/olimp/{file_name}"):
-            self.y.remove(f"/olimp/{file_name}")
-        self.y.upload(file_name, f"/olimp/{file_name}")
+        if self.y.is_file(f"{self.remote_dir}/{file_name}"):
+            self.y.remove(f"{self.remote_dir}/{file_name}")
+        self.y.upload(file_name, f"{self.remote_dir}/{file_name}")
         print(f'Файл {file_name} загружен на сервер.')
-
 
 if __name__ == '__main__':
     msg = ApiMsg(token='your_token_YDisk', user_name='your_name')
