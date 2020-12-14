@@ -122,7 +122,7 @@ class ApiMsg:
 
 
 if __name__ == '__main__':
-    msg = ApiMsg(token='AgAAAAAUazgOAAbC9HHZJGkGNUojriUJNPopggs_1', user_name='dm')
+    msg = ApiMsg(token='your_token', user_name='your_name')
 
     #msg(cm = "-h") # Справка
     #msg(cm = "-adm", prm = "rm") # Удалить все файлы на сервере
