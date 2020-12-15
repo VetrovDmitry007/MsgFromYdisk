@@ -121,16 +121,17 @@ class ApiMsg:
         self.y.upload(file_name, f"{self.remote_dir}/{file_name}")
         print(f'Файл {file_name} загружен на сервер.')
 
-if __name__ == '__main__':
-    msg = ApiMsg(token='your_token_YDisk', user_name='your_name')
 
+if __name__ == '__main__':
+    msg = ApiMsg(token='Agd1326AAAAAUazgOAAbC9HHZJGkGNUojriUJNPopggs_your_token_YDisk', user_name='your_name', remote_dir = '/olimp')
+                           
     #msg(cm = "-h") # Справка
     #msg(cm = "-adm", prm = "rm") # Удалить все файлы на сервере
     #msg(cm="-get", prm='dm.msg') # Скачать файл с сервера
-    #msg(cm="-set", prm="dm.py") # Отправить файл на сервер
-    msg(cm = "-adm", prm = "ls") # Список файлов на сервере
+    #msg(cm="-set", prm="MsgFromYdisk.py") # Отправить файл на сервер
+    #msg(cm = "-adm", prm = "ls") # Список файлов на сервере
 
-    #msg(cm = "-adm", prm = "lm") # Список диалогов
-    #msg(cm = "-ra", prm = "dm") # Прочитать все сообщения
-    #msg(cm = "-r", prm = "dm") # Прочитать последнее сообщение
-    #msg(cm = "-w", prm = "Привет") # Отправить сообщение
+    msg(cm = "-adm", prm = "lm") # Список сообщений
+    #msg(cm = "-ra", prm = "Bill_Gates") # Прочитать все сообщения пользователя "Bill_Gates"
+    #msg(cm = "-r", prm = "Bill_Gates") # Прочитать последнее сообщение пользователя "Bill_Gates"
+    #msg(cm = "-w", prm = "Привет") # Отправить сообщение                       
