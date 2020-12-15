@@ -123,7 +123,8 @@ class ApiMsg:
 
 
 if __name__ == '__main__':
-    msg = ApiMsg(token='Agd1326AAAAAUazgOAAbC9HHZJGkGNUojriUJNPopggs_your_token_YDisk', user_name='your_name', remote_dir = '/olimp')
+    import MyToken
+    msg = ApiMsg(token=MyToken.token,  user_name='your_name', remote_dir = '/olimp')
                            
     #msg(cm = "-h") # Справка
     #msg(cm = "-adm", prm = "rm") # Удалить все файлы на сервере
